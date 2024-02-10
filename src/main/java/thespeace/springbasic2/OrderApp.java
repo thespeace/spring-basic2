@@ -10,8 +10,9 @@ import thespeace.springbasic2.order.OrderServiceImpl;
 
 public class OrderApp {
     public static void main(String[] args) {
-        MemberService memberService = new MemberServiceImpl();
-        OrderService orderService = new OrderServiceImpl();
+        AppConfig appConfig = new AppConfig(); //AppConfig에서 인터페이스에 어떤 구현체를 할당해야 할지를 정해서 객체 생성을 한다. 구체 클래스를 의존할 필요가 없어짐.
+        MemberService memberService = appConfig.memberService();
+        OrderService orderService = appConfig.orderService();
 
         Long memberId = 1L;
         Member member = new Member(memberId, "memberA", Grade.VIP);

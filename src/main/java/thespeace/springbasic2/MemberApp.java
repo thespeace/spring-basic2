@@ -11,7 +11,8 @@ import thespeace.springbasic2.member.MemberServiceImpl;
 */
 public class MemberApp {
     public static void main(String[] args) {
-        MemberService memberService = new MemberServiceImpl();
+        AppConfig appConfig = new AppConfig();
+        MemberService memberService = appConfig.memberService();//AppConfig에서 인터페이스에 어떤 구현체를 할당해야 할지를 정해서 객체 생성을 한다. 구체 클래스를 의존할 필요가 없어짐.
         Member member = new Member(1L, "memberA", Grade.BASIC);
         memberService.join(member);
 

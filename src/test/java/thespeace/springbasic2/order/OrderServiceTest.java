@@ -1,7 +1,9 @@
 package thespeace.springbasic2.order;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import thespeace.springbasic2.AppConfig;
 import thespeace.springbasic2.member.Grade;
 import thespeace.springbasic2.member.Member;
 import thespeace.springbasic2.member.MemberService;
@@ -9,8 +11,15 @@ import thespeace.springbasic2.member.MemberServiceImpl;
 
 public class OrderServiceTest {
 
-    MemberService memberService = new MemberServiceImpl();
-    OrderService orderService = new OrderServiceImpl();
+    MemberService memberService;
+    OrderService orderService;
+
+    @BeforeEach //테스트 실행 전 무조건 실행.
+    public void beforeEach() {
+        AppConfig appConfig = new AppConfig();
+        memberService = appConfig.memberService();
+        orderService = appConfig.orderService();
+    }
 
     @Test
     void createOrder() {
