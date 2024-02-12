@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService{
      *              관심사(책임)의 분리가 필요한 시점이다.
      *              예를 들자면, 애플리케이션(하나의 공연) -> 남자 주인공 배역(인터페이스) -> 배우(구현체), 공연 기획자가 필요한 시점이다.
      *              애플리케이션의 전체 동작 방식을 구성(config)하기 위해, `구현 객체를 생성`하고 `연결`하는 책임을 가지는 별도의 클래스(공연 기획자)를 만들어 해결하자.
-     *
+     *  2.OCP 위반 : 구성 영역(AppConfig.java)과 사용 영역(Client Codes)을 나누어서 구성 영역만 변경해주면 클라이언트 코드는 변경할 필요가 없어졌다.
      */
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
