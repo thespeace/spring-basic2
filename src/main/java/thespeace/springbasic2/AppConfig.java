@@ -1,5 +1,7 @@
 package thespeace.springbasic2;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import thespeace.springbasic2.discount.DiscountPolicy;
 import thespeace.springbasic2.discount.FixDiscountPolicy;
 import thespeace.springbasic2.discount.RateDiscountPolicy;
@@ -10,20 +12,25 @@ import thespeace.springbasic2.member.MemoryMemberRepository;
 import thespeace.springbasic2.order.OrderService;
 import thespeace.springbasic2.order.OrderServiceImpl;
 
+@Configuration
 public class AppConfig {
 
+    @Bean
     public MemberService memberService() {
         return new MemberServiceImpl(memberRepository()); //생성자 주입.
     }
 
-    private MemberRepository memberRepository() {
+    @Bean
+    public MemberRepository memberRepository() {
         return new MemoryMemberRepository(); //중복 제거, 다른 구현체로 변경할 때 한 부분만 변경하면 된다.
     }
 
+    @Bean
     public OrderService orderService() {
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
+    @Bean
     public DiscountPolicy discountPolicy() {
 //        return new FixDiscountPolicy(); //새로운 구조와 할인 정책 변경.
         return new RateDiscountPolicy();
@@ -77,4 +84,15 @@ public class AppConfig {
  * -IoC 컨테이너, DI 컨테이너
  *  AppConfig 처럼 객체를 생성하고 관리하면서 의존관계를 연결해 주는 것을 IoC 컨테이너 또는 DI 컨테이너라 한다.
  *  의존관계 주입에 초점을 맞추어 최근에는 주로 `DI 컨테이너`라 한다. 또는 어샘블러, 오브젝트 팩토리 등으로 불리기도 한다.
+ *
+ *
+ *
+ * -스프링 컨테이너
+ *  ApplicationContext를 스프링 컨테이너라 한다.
+ *  기존에는 개발자가 AppConfig를 사용해서 직접 객체를 생성하고 DI를 했지만, 이제부터는 스프링 컨테이너를 통해서 사용한다.
+ *  스프링 컨테이너는 @Configuration이 붙은 AppConfig를 설정(구성) 정보로 사용한다. 여기서 @Bean이라 적힌 메서드를 모두 호출해서 반환된 객체를 스프링 컨테이너에 등록한다.
+ *  이렇게 스프링 컨테이너에 등록된 객체를 스프링 빈이라 한다.
+ *  스프링 빈은 @Bean이 붙은 메서드의 명을 스프링 빈의 이름으로 사용한다.
+ *  이전에는 개발자가 필요한 객체를 AppConfig를 사용해서 직접 조회했지만, 이제부터는 스프링 컨테이너를 통 해서 필요한 스프링 빈(객체)를 찾아야 한다.
+ *  스프링 빈은 applicationContext.getBean()메서드를 사용해서 찾을 수 있다.
  */
