@@ -1,9 +1,12 @@
 package thespeace.springbasic2.member;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
 //데이터베이스가 확정되지 않아서 메모리에 저장하기 위해 만든 클래스(테스트용).
+@Component
 public class MemoryMemberRepository implements MemberRepository {
 
     private static Map<Long, Member> store = new HashMap<>();
