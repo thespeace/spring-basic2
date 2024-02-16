@@ -18,4 +18,9 @@ public class MemberServiceImpl implements MemberService {//구현체가 하나�
         return memberRepository.findById(memberId);
     }
 
+
+    //싱글톤 테스트 용도
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
+    }
 }

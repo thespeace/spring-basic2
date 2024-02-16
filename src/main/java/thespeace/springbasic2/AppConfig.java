@@ -17,16 +17,19 @@ public class AppConfig {
 
     @Bean
     public MemberService memberService() {
+        System.out.println("call AppConfig.memberService"); //싱글톤 확인용
         return new MemberServiceImpl(memberRepository()); //생성자 주입.
     }
 
     @Bean
     public MemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository"); //싱글톤 확인용
         return new MemoryMemberRepository(); //중복 제거, 다른 구현체로 변경할 때 한 부분만 변경하면 된다.
     }
 
     @Bean
     public OrderService orderService() {
+        System.out.println("call AppConfig.orderService"); //싱글톤 확인용
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
