@@ -1,5 +1,6 @@
 package thespeace.springbasic2.order;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import thespeace.springbasic2.discount.DiscountPolicy;
@@ -10,6 +11,7 @@ import thespeace.springbasic2.member.MemberRepository;
 import thespeace.springbasic2.member.MemoryMemberRepository;
 
 @Component
+@RequiredArgsConstructor //롬복 라이브러리, final이 붙은 필드를 모아서 생성자를 자동으로 만들어준다.
 public class OrderServiceImpl implements OrderService{
 
 //    private final MemberRepository memberRepository = new MemoryMemberRepository();
@@ -38,12 +40,6 @@ public class OrderServiceImpl implements OrderService{
      */
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
-
-    @Autowired
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {//[DIP 원칙 완성]생성자를 통해서 구현체를 선택, 추상화에만 의존! `의존관계에 대한 고민은 외부`에 맡기고 `실행에만 집중`하면 된다.
-        this.memberRepository = memberRepository;                                              //의존관계를 마치 외부에서 주입해주는 것 같다고해서 DI(Dependency Injection), 의존관계 주입, 의존성 주입이라 한다.
-        this.discountPolicy = discountPolicy;
-    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
