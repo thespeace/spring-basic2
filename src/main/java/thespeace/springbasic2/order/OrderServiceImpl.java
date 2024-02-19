@@ -11,7 +11,7 @@ import thespeace.springbasic2.member.MemberRepository;
 import thespeace.springbasic2.member.MemoryMemberRepository;
 
 @Component
-@RequiredArgsConstructor //롬복 라이브러리, final이 붙은 필드를 모아서 생성자를 자동으로 만들어준다.
+//@RequiredArgsConstructor //롬복 라이브러리, final이 붙은 필드를 모아서 생성자를 자동으로 만들어준다.
 public class OrderServiceImpl implements OrderService{
 
 //    private final MemberRepository memberRepository = new MemoryMemberRepository();
@@ -38,8 +38,15 @@ public class OrderServiceImpl implements OrderService{
      *              애플리케이션의 전체 동작 방식을 구성(config)하기 위해, `구현 객체를 생성`하고 `연결`하는 책임을 가지는 별도의 클래스(공연 기획자)를 만들어 해결하자.
      *  2.OCP 위반 : 구성 영역(AppConfig.java)과 사용 영역(Client Codes)을 나누어서 구성 영역만 변경해주면 클라이언트 코드는 변경할 필요가 없어졌다.
      */
+
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
+
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {

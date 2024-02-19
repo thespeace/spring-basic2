@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import thespeace.springbasic2.AutoAppConfig;
+import thespeace.springbasic2.member.MemberRepository;
 import thespeace.springbasic2.member.MemberService;
+import thespeace.springbasic2.order.OrderServiceImpl;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -17,6 +19,10 @@ public class AutoAppConfigTest {
 
         MemberService memberService = ac.getBean(MemberService.class);
         assertThat(memberService).isInstanceOf(MemberService.class);
+
+        OrderServiceImpl bean = ac.getBean(OrderServiceImpl.class);
+        MemberRepository memberRepository = bean.getMemberRepository();
+        System.out.println("memberRepository = " + memberRepository);
     }
 }
 
