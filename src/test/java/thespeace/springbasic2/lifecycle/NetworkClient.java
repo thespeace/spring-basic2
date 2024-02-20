@@ -1,14 +1,15 @@
 package thespeace.springbasic2.lifecycle;
 
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
 //외부 네트워크에 미리 연결하는 클래스.
-public class NetworkClient {
+public class NetworkClient implements InitializingBean, DisposableBean {
 
     private String url;
 
     public NetworkClient() {
         System.out.println("생성자 호출, url = " + url);
-        connect();
-        call("초기화 연결 메시지");
     }
 
     public void setUrl(String url) {//객체를 생성한 다음에 외부에서 수정자 주입을 통해서 해당 메서드가 호출되어야 url이 존재.
@@ -25,7 +26,31 @@ public class NetworkClient {
     }
 
     //서비스 종료시 호출
-    public void disconnect() {
+    public void disConnect() {
         System.out.println("close : " + url);
     }
+
+    @Override
+    public void afterPropertiesSet() throws Exception { //InitializingBean은 afterPropertiesSet() 메서드로 초기화를 지원한다.
+        connect();
+        call("초기화 연결 메시지");
+    }
+
+    @Override
+    public void destroy() throws Exception { //DisposableBean 은 destroy() 메서드로 소멸을 지원한다.
+        disConnect();
+    }
 }
+
+/**
+ *  -인터페이스 InitializingBean, DisposableBean
+ *   코드 실행 후 출력 결과를 보면 초기화 메서드가 주입 완료 후에 적절하게 호출 된 것을 확인할 수 있다.
+ *   그리고 스프링 컨테이너의 종료가 호출되자 소멸 메서드가 호출 된 것도 확인할 수 있다
+ *
+ *   초기화, 소멸 인터페이스 단점
+ *      1. 이 인터페이스는 스프링 전용 인터페이스다. 해당 코드가 스프링 전용 인터페이스에 의존한다.
+ *      2. 초기화, 소멸 메서드의 이름을 변경할 수 없다.
+ *      3. 내가 코드를 고칠 수 없는 외부 라이브러리에 적용할 수 없다
+ *
+ *   참고: 인터페이스를 사용하는 초기화, 종료 방법은 스프링 초창기에 나온 방법들이고, 지금은 다음의 더 나은 방법들이 있어서 거의 사용하지 않는다.
+ */
