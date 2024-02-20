@@ -1,10 +1,7 @@
 package thespeace.springbasic2.lifecycle;
 
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-
 //외부 네트워크에 미리 연결하는 클래스.
-public class NetworkClient implements InitializingBean, DisposableBean {
+public class NetworkClient{
 
     private String url;
 
@@ -30,14 +27,14 @@ public class NetworkClient implements InitializingBean, DisposableBean {
         System.out.println("close : " + url);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception { //InitializingBean은 afterPropertiesSet() 메서드로 초기화를 지원한다.
+    public void init() {
+        System.out.println("NetworkClient.init");
         connect();
         call("초기화 연결 메시지");
     }
 
-    @Override
-    public void destroy() throws Exception { //DisposableBean 은 destroy() 메서드로 소멸을 지원한다.
+    public void close() {
+        System.out.println("NetworkClient.close");
         disConnect();
     }
 }
@@ -53,4 +50,22 @@ public class NetworkClient implements InitializingBean, DisposableBean {
  *      3. 내가 코드를 고칠 수 없는 외부 라이브러리에 적용할 수 없다
  *
  *   참고: 인터페이스를 사용하는 초기화, 종료 방법은 스프링 초창기에 나온 방법들이고, 지금은 다음의 더 나은 방법들이 있어서 거의 사용하지 않는다.
+ *
+ *
+ *
+ *  -빈 등록 초기화, 소멸 메서드 지정
+ *   설정 정보에 @Bean(initMethod = "init", destroyMethod = "close") 처럼 초기화, 소멸 메서드를 지정할 수 있다.
+ *
+ *   설정 정보 사용 특징
+ *      메서드 이름을 자유롭게 줄 수 있다.
+ *      스프링 빈이 스프링 코드에 의존하지 않는다.
+ *      코드가 아니라 설정 정보를 사용하기 때문에 코드를 고칠 수 없는 외부 라이브러리에도 초기화, 종료 메서드를 적용할 수 있다.
+ *
+ *   종료 메서드 추론
+ *      @Bean의 destroyMethod 속성에는 아주 특별한 기능이 있다.
+ *      라이브러리는 대부분 close , shutdown 이라는 이름의 종료 메서드를 사용한다.
+ *      @Bean의 destroyMethod 는 기본값이 (inferred) (추론)으로 등록되어 있다.
+ *      이 추론 기능은 close , shutdown 라는 이름의 메서드를 자동으로 호출해준다. 이름 그대로 종료 메서드를 추론해서 호출해준다.
+ *      따라서 직접 스프링 빈으로 등록하면 종료 메서드는 따로 적어주지 않아도 잘 동작한다.
+ *      추론 기능을 사용하기 싫으면 destroyMethod="" 처럼 빈 공백을 지정하면 된다.
  */
