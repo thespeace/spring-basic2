@@ -2,6 +2,7 @@ package thespeace.springbasic2.scope;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +53,10 @@ public class SingletonWithPrototypeTest1 {
     static class ClientBean {
 
         @Autowired
-        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+        private Provider<PrototypeBean> provider;
 
         public int logic() {
-            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+            PrototypeBean prototypeBean = provider.get();
             prototypeBean.addCount();
             int count = prototypeBean.getCount();
             return count;
@@ -150,4 +151,41 @@ public class SingletonWithPrototypeTest1 {
  *      특징
  *          ObjectFactory: 기능이 단순, 별도의 라이브러리 필요 없음, 스프링에 의존.
  *          ObjectProvider: ObjectFactory 상속, 옵션, 스트림 처리등 편의 기능이 많고, 별도의 라이브러리 필요 없음, 스프링에 의존.
+ *
+ *   3.JSR-330 Provider
+ *     마지막 방법은 jakarta.inject.Provider 라는 JSR-330 자바 표준을 사용하는 방법이다.
+ *      {@code
+ *      static class ClientBean {
+ *
+ *          @Autowired
+ *          private Provider<PrototypeBean> provider;
+ *
+ *          public int logic() {
+ *              PrototypeBean prototypeBean = provider.get();
+ *              prototypeBean.addCount();
+ *              int count = prototypeBean.getCount();
+ *              return count;
+ *          }
+ *      }
+ *      }
+ *      실행해보면 provider.get() 을 통해서 항상 새로운 프로토타입 빈이 생성되는 것을 확인할 수 있다.
+ *      provider 의 get() 을 호출하면 내부에서는 스프링 컨테이너를 통해 해당 빈을 찾아서 반환한다. (DL)
+ *      자바 표준이고, 기능이 단순하므로 단위테스트를 만들거나 mock 코드를 만들기는 훨씬 쉬워진다.
+ *      Provider 는 지금 딱 필요한 DL 정도의 기능만 제공한다.
+ *
+ *      특징
+ *          get() 메서드 하나로 기능이 매우 단순하다.
+ *          별도의 라이브러리가 필요하다.
+ *          자바 표준이므로 스프링이 아닌 다른 컨테이너에서도 사용할 수 있다.
+ *
+ *      정리
+ *          그러면 프로토타입 빈을 언제 사용할까? 매번 사용할 때 마다 의존관계 주입이 완료된 새로운 객체가 필요하면 사용하면 된다.
+ *          그런데 실무에서 웹 애플리케이션을 개발해보면, 싱글톤 빈으로 대부분의 문제를 해결할 수 있기 때문에 프로토타입 빈을 직접적으로 사용하는 일은 매우 드물다.
+ *          ObjectProvider , JSR330 Provider 등은 프로토타입 뿐만 아니라 DL이 필요한 경우는 언제든지 사용할 수 있다.
+ *
+ *      참고: 실무에서 자바 표준인 JSR-330 Provider를 사용할 것인지, 아니면 스프링이 제공하는 ObjectProvider를 사용할 것인지 고민이 될 것이다.
+ *            ObjectProvider는 DL을 위한 편의 기능을 많이 제공해주고 스프링 외에 별도의 의존관계 추가가 필요 없기 때문에 편리하다.
+ *            만약(정말 그럴일은 거의 없겠지만) 코드를 스프링이 아닌 다른 컨테이너에서도 사용할 수 있어야 한다면 JSR-330 Provider를 사용해야한다.
+ *            스프링을 사용하다 보면 이 기능 뿐만 아니라 다른 기능들도 자바 표준과 스프링이 제공하는 기능이 겹칠때가 많이 있다.
+ *            대부분 스프링이 더 다양하고 편리한 기능을 제공해주기 때문에, 특별히 다른 컨테이너를 사용할 일이 없다면, 스프링이 제공하는 기능을 사용하면 된다.
  */
