@@ -30,14 +30,14 @@ public class LogDemoController {
      *
      *   해결 방법
      *      1.Provider
-     *
+     *      2.Proxy
      */
-    private final ObjectProvider<MyLogger> myLoggerProvider; //ObjectProvider로 MyLogger를 디펜던시 룩업할 수 있게 되었다.
+    private final MyLogger myLogger; //ObjectProvider로 MyLogger를 디펜던시 룩업할 수 있게 되었다.
 
     @RequestMapping("log-demo")
     @ResponseBody //문자열 바로 반환.
     public String logDemo(HttpServletRequest request) throws InterruptedException {
-        MyLogger myLogger = myLoggerProvider.getObject(); //ObjectProvider 덕분에 ObjectProvider.getObject() 를 호출하는 시점까지 request scope 빈의 생성을 지연할 수 있다.
+//        MyLogger myLogger = myLoggerProvider.getObject(); //ObjectProvider 덕분에 ObjectProvider.getObject() 를 호출하는 시점까지 request scope 빈의 생성을 지연할 수 있다.
                                                           //또한 ObjectProvider.getObject() 를 호출하시는 시점에는 HTTP 요청이 진행중이므로 request scope 빈 생성이 정상 처리된다.
                                                           //또한 LogDemoController , LogDemoService 에서 각각 한번씩 따로 호출해도 같은 HTTP 요청이면 같은 스프링 빈이 반환된다!
         String requestURL = request.getRequestURI().toString();
